@@ -15,6 +15,10 @@ import com.opencsv.bean.CsvBindByName;
 
 @Entity
 @Table(name = "recibos")
+/*ESTADOS 
+ * SIN FIRMA  	 - 1
+ * FIRMA ADMIN 	 - 2
+ * FIRMA USUARIO - 3*/
 
 public class Recibo implements Serializable{
 	
@@ -26,10 +30,9 @@ public class Recibo implements Serializable{
 	private Long id;
 	
 	@CsvBindByName(column = "idtrax")
-	private Long idtrax;
+	private Long idtrax;	
 	
-	
-	private int estado;
+	private int estado = 1;
 	
 	@CsvBindByName(column = "idusuario")
 	private Long idusuario;
@@ -40,17 +43,26 @@ public class Recibo implements Serializable{
 	@CsvBindByName(column = "idconceptouno")
 	private int idconceptouno;
 	
+	@CsvBindByName(column = "conceptouno")
+	private String conceptouno;
+	
 	@CsvBindByName(column = "importeuno")
 	private int importeuno;
 	
 	@CsvBindByName(column = "idconceptodos")
 	private int idconceptodos;
 	
+	@CsvBindByName(column = "conceptodos")
+	private String conceptodos;
+	
 	@CsvBindByName(column = "importedos")
 	private int importedos;
 
 	@CsvBindByName(column = "idconceptotres")
 	private int idconceptotres;
+	
+	@CsvBindByName(column = "conceptotres")
+	private String conceptotres;
 	
 	@CsvBindByName(column = "importetres")
 	private int importetres;
@@ -176,7 +188,30 @@ public class Recibo implements Serializable{
 		this.idfirmadmin = idfirmadmin;
 	}
 
-	
-	
-	
+	public String getConceptouno() {
+		return conceptouno;
+	}
+
+	public void setConceptouno(String conceptouno) {
+		this.conceptouno = conceptouno;
+	}
+
+	public String getConceptodos() {
+		return conceptodos;
+	}
+
+	public void setConceptodos(String conceptodos) {
+		this.conceptodos = conceptodos;
+	}
+
+	public String getConceptotres() {
+		return conceptotres;
+	}
+
+	public void setConceptotres(String conceptotres) {
+		this.conceptotres = conceptotres;
+	}
+
+		
+
 }

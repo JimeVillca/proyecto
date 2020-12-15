@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<meta charset="UTF-8" />
+
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container">
+	<br>
+	<br>
+
+<div class="card bg-light mb-5 center" style="max-width: 80rem; text-align: center;">
+  <div class="card-header">Blanqueo de firma del sistema</div>
+  <div class="card-body">
+    <p class="card-text" >Estimado su firma fue blanqueada, presione volver y vuelva a registrarla</p>
+        			
+    
+    				<h4 class="card-title">
+					<a th:href="@{/listarecibos}" class="btn btn-light btn-xs">&laquo; volver</a> 
+				</h4>
+  </div>
+</div>
+
+	<br>
+	<footer th:replace="layout/layout :: footer"></footer>
+
+	</div>
+</body>
+</html>

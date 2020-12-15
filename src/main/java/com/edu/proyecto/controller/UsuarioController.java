@@ -290,8 +290,16 @@ public class UsuarioController {
 	@RequestMapping(value = "/form", method = RequestMethod.POST)
 	public String guardar(@Valid Usuario usuario, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status, BCryptPasswordEncoder passEncoder) {
+		Usuario usuarioRep=usuarioService.findByUsername(usuario.getUsername());
 		List<TipoDocumento> findAll = tipodocumentoservice.findAll();
 		List<Rol> findAllRol = rolService.findAllRol();
+		model.addAttribute("tipodocumento", findAll);
+		model.addAttribute("rol", arrayrolactivo);
+		if(usuarioRep!= null) {
+			model.addAttribute("error","El valor del campo usuario esta repetido");
+			return "form";
+		}
+		
 		if (result.hasErrors()) {
 			model.addAttribute("tipodocumento", findAll);
 			model.addAttribute("rol", findAllRol);
@@ -307,7 +315,7 @@ public class UsuarioController {
 
 		String mensajeflash = (usuario.getIdusuario() != null) ? "Usuario editado con exito!"
 				: "Usuario creado con exito!";
-
+		
 		usuarioService.save(usuario);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeflash);
@@ -365,14 +373,6 @@ public class UsuarioController {
 				+ "<blockquote> USUARIO " + usuarionuevo + " <br> CONTRASEÑA " + passnuevamail
 				+ "</blockquote><br>su contraseña es temporal, ingrese al sistema para cambiar su password </h4><br><hr style=\\\"width:100%;\\\">\\r\\n <h3>SISTEMA HELDAN</h3>";
 
-		/*
-		 * String mensaje= new String ("Estimado usuario   "+usuarionuevo +
-		 * " Se acaba de dar de alta su usuario en el sistema 	" +
-		 * "					sus credenciales son:		" + "USUARIO	 " +
-		 * usuarionuevo + "CONTRASEÑA "+ passnuevo +
-		 * "su contraseña es temporal, ingrese al siguiente link para cambiar su password "
-		 * + "http://localhost:8080/nuevapass/"+idusuariomail ) ;
-		 */
 
 		String mensaje = new String(mensajeuno + mensajetres);
 

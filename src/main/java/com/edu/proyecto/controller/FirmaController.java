@@ -140,5 +140,28 @@ public class FirmaController {
 			return "redirect:/formfirma";
 
 		}
+		
+	}
+	
+	@RequestMapping(value = "/blanqueofirma")
+	public String blanqueofirma( Model model,Authentication auten, HttpSession session ) {
+				
+		Usuario usuario = usuarioservice.findByUsername(auten.getName());
+		log.info(auten.getName() + " ID - ID FIRMA " + usuario.getIdusuario());
+		//System.out.print("ESTA ES EL ID MIRAME " + emailadmin);		
+		Firma firma = firmaService.findByUsuario(usuario);
+
+		firmaService.delete(usuario.getIdusuario());
+	//	if(session.getAttribute("regfir") == null) {
+			//session.setAttribute("regfir", uniquename);		
+	//	}
+		
+	//	if(firma.getUsuario().equals(usuario.getIdusuario())) {
+	//	session.setAttribute("regfit", true);	
+	//	}else {
+	//	session.setAttribute("regfit", false);	
+	//	}
+			
+		return "/";
 	}
 }

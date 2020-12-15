@@ -81,6 +81,8 @@ public class Usuario implements Serializable {
 	
 	private Long activo;
 	
+	private Long estado;
+	
 	public Long getIdusuario() {
 		return idusuario;
 	}
@@ -179,8 +181,13 @@ public class Usuario implements Serializable {
 	public void setActivo(Long activo) {
 		this.activo = activo;
 	}
-	
-	
-	
+
+	public Long getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Long estado) {
+		this.estado = estado;
+	}
 	
 }

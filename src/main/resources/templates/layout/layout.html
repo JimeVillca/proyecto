@@ -59,9 +59,8 @@
 						  
 						  <a class="dropdown-item" th:if="${session.regfit}" th:href="@{/formfirma}">Registrar Firma</a>
 						  
-						  <a class="dropdown-item" th:if="${session.regfit == false}" th:href="@{/registrarfirma}">Resetear Fir</a>
-						  
-						
+						  <a class="dropdown-item" th:if="${session.regfit == false}" th:href="@{/blanqueofirma}">Resetear Firma</a>
+						  						
 							<form id="logoutForm" th:action="@{/logout}" method="post">
 								<button class="dropdown-item"
 									onclick="document.getElementById('logoutForm').submit();"

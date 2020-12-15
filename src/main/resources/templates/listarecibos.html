@@ -20,15 +20,30 @@
 			<div class="card-header" th:text="${titulo}"></div>
 			<div class="card-body">
 
+				<div>
+					<h5>Busqueda</h5>
+					<input class="form-control" id="myBuscador" type="text"
+						placeholder="Buscar por nrorecibo,usuario,nrodocumento...">
+		
+				</div>
+				<div>
+				<br>
+				<a class="btn btn-success btn-xs " th:if="${estado} == true"
+					th:href="@{/primerainstanciafirmasiva/}" th:text="'Firma masiva'"></a>
+
+				 <a class="btn btn-info btn-xs float-right" th:if="false" th:href="@{/formfirma/}"
+					th:text="'Firma masiva'"></a>
+				</div>
 				<div class="dropdown show">
 					<a class="btn btn-secondary dropdown-toggle" href="#" role="button"
 						id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
 						aria-expanded="false"> Seleccione estado </a>
 
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-						<a class="dropdown-item" th:href="@{/listarecibos/1}">Recibos sin firma</a> 
-						<a class="dropdown-item" th:href="@{/listarecibos/2}">Recibos sin firma usuario</a> 
-						<a class="dropdown-item" th:href="@{/listarecibos/3}">Recibos firmados</a>
+						<a class="dropdown-item" th:href="@{/listarecibos/1}">Recibos
+							sin firma</a> <a class="dropdown-item" th:href="@{/listarecibos/2}">Recibos
+							sin firma usuario</a> <a class="dropdown-item"
+							th:href="@{/listarecibos/3}">Recibos firmados</a>
 					</div>
 				</div>
 
@@ -46,7 +61,7 @@
 							<th>VER</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="tableBody">
 						<tr th:each="reciboc: ${reciboc}">
 							<td th:text="${reciboc.id}"></td>
 							<td th:text="${reciboc.usuario.nombre}"></td>
@@ -57,7 +72,6 @@
 
 
 							<td><a class="btn btn-primary btn-xs"
-							
 								th:href="@{/verecibo/} + ${reciboc.id}" th:text="'VER'"></a></td>
 
 
@@ -65,22 +79,37 @@
 					</tbody>
 
 				</table>
-				
-				<a class="btn btn-success btn-xs" th:if="${estado} == true"  th:href="@{/primerainstanciafirmasiva/}" th:text="'Firma masiva'"></a>
-				
-				&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-				
-				<a class="btn btn-info btn-xs" th:if="false" th:href="@{/formfirma/}" th:text="'Firma masiva'"></a>
-				
-		
-				
-			
 
 			</div>
 		</div>
 	</div>
-	
-	
 	<footer th:replace="layout/layout :: footer"></footer>
+
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							$("#myBuscador")
+									.on(
+											"keyup",
+											function() {
+												console.log("entra esn key");
+												var value = $(this).val()
+														.toLowerCase();
+												$("#tableBody tr")
+														.filter(
+																function() {
+																	$(this)
+																			.toggle(
+																					$(
+																							this)
+																							.text()
+																							.toLowerCase()
+																							.indexOf(
+																									value) > -1)
+																});
+											});
+						});
+	</script>
 </body>
 </html>

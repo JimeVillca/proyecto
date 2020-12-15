@@ -27,7 +27,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
+import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +63,7 @@ import com.opencsv.CSVReaderHeaderAware;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvValidationException;
+import com.sun.tools.sjavac.Log;
 import com.edu.proyecto.SpringSecuityConfig;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -92,7 +93,7 @@ public class ReciboController {
 	@Autowired
 	private IFirmaService firmaservice;
 
-	private final Logger log = LoggerFactory.getLogger(getClass());
+	private final org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
 
 	@GetMapping(value = "/verecibo/{id}")
 	public String ver(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
@@ -143,13 +144,24 @@ public class ReciboController {
 		return "listarecibosusuario";
 	}
 	
+	public static String usuariocorreo;
+	
+	public static String clavegenerada;
+	
+	public String nombreusuario;
+	
 	@RequestMapping(value = "/primerainstanciaindividual", method = RequestMethod.GET)
 	public String primerainstanciaindividual(Model model, Authentication auten,String name, String value, HttpSession session ) {
-//	
+		Usuario usuario = usuarioservice.findByUsername(auten.getName());
+		log.info(auten.getName() + " id " + usuario.getIdusuario());
+		usuariocorreo = usuario.getEmail();
+		nombreusuario = usuario.getUsername();
 		if(session.getAttribute("name") == null) {
 			String uniquename = UUID.randomUUID().toString();
 			session.setAttribute("name", uniquename);
-//			enviomailfirmaautogenerada();
+			clavegenerada = uniquename;
+			
+			enviomailfirmaautogenerada();
 		}		
 		else {
 			System.out.println("NAME SESSION "+ session.getAttribute("name"));
@@ -336,18 +348,32 @@ public class ReciboController {
 		
 	}
 	
+	
 	@RequestMapping(value = "/primerainstanciafirmasiva", method = RequestMethod.GET)
 	public String primerainstanciafirmasiva(Model model, Authentication auten,String name, String value, HttpSession session ) {
-//	
+		Usuario usuario = usuarioservice.findByUsername(auten.getName());
+		log.info(auten.getName() + " id " + usuario.getIdusuario());
+		usuariocorreo = usuario.getEmail();
+		nombreusuario = usuario.getUsername();
+		System.out.println("EMAIL "+ usuariocorreo);
+		
 		if(session.getAttribute("name") == null) {
 			String uniquename = UUID.randomUUID().toString();
 			session.setAttribute("name", uniquename);
-//			enviomailfirmaautogenerada();
-		}		
+			clavegenerada = (String) session.getAttribute("name") ;
+			System.out.println("Clave AUTOGENERADA "+ clavegenerada);
+
+			enviomailfirmaautogenerada();
+			System.out.println("LLEGO Y MANDO MAIL");
+		}	
 		else {
 			System.out.println("NAME SESSION "+ session.getAttribute("name"));
+			
+			System.out.println("Clave AUTOGENERADA "+ clavegenerada);
+			enviomailfirmaautogenerada();
 			return "primerainstanciafirmasiva";
 		}
+
 //		generarcodigo(model, session);		
 		System.out.println("NAME SESSION "+ session.getAttribute("name"));		
 		model.addAttribute("mensaje", mensaje);
@@ -399,15 +425,14 @@ public class ReciboController {
 	}
 
 	public String enviomailfirmaautogenerada() {
-		Usuario usuario = new Usuario();
-			List<Usuario> findAllUse = usuarioservice.findAll();
+		System.out.println("LLEGO Y MANDO MAIL");
+
 			System.out.println( "Hello World!" );
 	        Properties propiedad = new Properties();
 	        propiedad.setProperty("mail.smtp.host", "smtp.gmail.com");
 	        propiedad.setProperty("mail.smtp.starttls.enable", "true");
 	        propiedad.setProperty("mail.smtp.port", "587");
 	        propiedad.setProperty("mail.smtp.auth", "true");
-	        
 	        
 //	      mailnuevo = usuario.getEmail();
 //			passnuevo = usuario.getContrasena();
@@ -416,36 +441,42 @@ public class ReciboController {
 	        String correoEnvia = "hedlanrecibos@gmail.com";//tu correo gmaildesde donde se envia 
 	        String contrasena = "lanabanana";//tu contraseña de acceso a gmaila esa cuenta
 	        
-	        String receptor = emailadmin; //cuenta que recibe
+	        String receptor = usuariocorreo; //cuenta que recibe
 	      	            
-	        String asunto = "Bienvenido al sistema de RECIBOS HEDLAN";
+	        String asunto = "RECIBOS HEDLAN - Firma autogenerada";
 	                
-	        String mensajeuno = "";
-	        String mensaje = new String (mensajeuno);
+	        String mensajeuno = "<h3>Estimado  " + nombreusuario + "</h3><br> "
+					+ " <h4><br>Se acaba generar una firma, la misma deber ser ingresada en la aplicacion para poder finalidar la firma de su recibo"
 
+					+ "<blockquote> Firma autogenerada    " + clavegenerada 
+					+ "</blockquote><br> </h4><br><hr style=\\\"width:100%;\\\">\\r\\n <h3>SISTEMA HELDAN</h3>";
+
+
+			String mensaje = new String(mensajeuno);
 	        
 	        MimeMessage mail = new MimeMessage(sesion);
 	        try {
-	            mail.setFrom(new InternetAddress (correoEnvia));
-	            mail.addRecipient(Message.RecipientType.TO, new InternetAddress (receptor));
-	            mail.setSubject(asunto);
-	            mail.setText(mensaje);
-	            
-	            Transport transportar = sesion.getTransport("smtp");
-	            transportar.connect(correoEnvia,contrasena);
-	            transportar.sendMessage(mail, mail.getRecipients(Message.RecipientType.TO));          
-	            transportar.close();
-	            
-	        } catch (AddressException ex) {
-	        	log.info(ex.toString());
-	            System.err.println(ex);
-	        } catch (MessagingException ex) {
-	        	log.info(ex.toString());
-	            System.err.println(ex);
-	        }	        
-	        log.info("Enviado");
-	 		return "listar";
-			
-		}
-		
+	        	mail.setContent(mensaje, "text/html; charset=utf-8");
+				mail.setFrom(new InternetAddress(correoEnvia));
+				mail.addRecipient(Message.RecipientType.TO, new InternetAddress(receptor));
+				mail.setSubject(asunto);
+//				mail.setText(mensaje);
+
+				Transport transportar = sesion.getTransport("smtp");
+				transportar.connect(correoEnvia, contrasena);
+				transportar.sendMessage(mail, mail.getRecipients(Message.RecipientType.TO));
+				transportar.close();
+
+	    	} catch (AddressException ex) {
+				Logger.getLogger(ex.toString());
+				System.err.println(ex);
+			} catch (MessagingException ex) {
+				Logger.getLogger(ex.toString());
+				System.err.println(ex);
+			}
+
+			Logger.getLogger("Enviado");
+
+			return "/";
+	}
 }

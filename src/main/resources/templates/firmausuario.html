@@ -2,39 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/layout :: head"></head>
 <meta charset="UTF-8" />
-
 <body>
-
 	<header th:replace="layout/layout :: header"></header>
-
 	<div class="container theme-showcase" role="main">
 		<hr class="featurette-divider">
 		<a th:href="@{/listarecibosusuario/}" class="btn btn-light btn-xs">&laquo;
 			volver</a> <img th:src="@{/imagenes/lanahedy2.png}" width="136"
 			height="136" class="center">
-
-
+		<div class="card">
+			<div class="card-body">Se genero un clave y fue enviada a su correo electronico</div>
+		</div>
 		<form th:action="@{/firmausuario}" method="post">
 			<h3 class="form-signin-heading text-center">Firmar recibo</h3>
+			<label for="firmautogeneradas" class="sr-only">Firma
+				autogenerada</label> <input type="password" id="firmautogeneradas"
+				th:name="firmautogeneradas" class="form-control" placeholder="firmautogeneradas" required> 
+				<label for="firma"	class="sr-only">Firma</label> 
+				<input type="password" id="firma" th:name="firma" class="form-control" placeholder="firma" required>
 
-			<label for="firmautogeneradas" class="sr-only">Firma autogenerada</label> 
-			<input type="password" id="firmautogeneradas"
-				th:name="firmautogeneradas" class="form-control"
-				placeholder="firmautogeneradas" required> 
+
+			<input type="submit" class="btn btn-lg btn-primary btn-block" th:href="@{/firmausuario}" th:value="'FIRMAR'">
 				
-			<label for="firma" class="sr-only">Firma</label> 
-			<input type="password" id="firma" th:name="firma"
-				class="form-control" placeholder="firma" required>
-
-			<input type="submit" class="btn btn-lg btn-primary btn-block"
-				th:href="@{/firmausuario}" th:value="'FIRMAR'">
 		</form>
 
 	</div>
-
 	<div class="container">
 		<hr />
-
 	</div>
 </body>
 </html>
