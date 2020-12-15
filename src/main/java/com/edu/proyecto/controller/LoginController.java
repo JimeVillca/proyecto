@@ -144,7 +144,9 @@ public class LoginController {
 			passresetear = uniqueFilename;
 			model.addAttribute("success", "Se envio con exito la nueva contraseña a su mail");
 			usuario.setPassword(passEncoder.encode(uniqueFilename));
-			mailresetear = usuario.getEmail();
+			mailresetear = correo;
+		usuarioService.save(usuario);
+					
 			usuarioresetear = usuario.getUsername();
 //Se maneja el envio de mail y se cambia la pass y el rol del usuario por el que sea init, redireccionar a NUEVAPASS.		
 			System.out.println("ROL "+ usuario.getRol());		

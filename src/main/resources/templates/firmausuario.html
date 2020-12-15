@@ -7,23 +7,48 @@
 	<div class="container theme-showcase" role="main">
 		<hr class="featurette-divider">
 		<a th:href="@{/listarecibosusuario/}" class="btn btn-light btn-xs">&laquo;
-			volver</a> <img th:src="@{/imagenes/lanahedy2.png}" width="136"
-			height="136" class="center">
+			volver</a>
+			
 		<div class="card">
-			<div class="card-body">Se genero un clave y fue enviada a su correo electronico</div>
-		</div>
+			<div class="card-body">Se genero una clave nueva y fue enviada a su
+				correo electronico</div>
+		</div>	
+			
+			 <img th:src="@{/imagenes/lanahedy2.png}" width="136"
+			height="136" class="center">
+
 		<form th:action="@{/firmausuario}" method="post">
-			<h3 class="form-signin-heading text-center">Firmar recibo</h3>
-			<label for="firmautogeneradas" class="sr-only">Firma
-				autogenerada</label> <input type="password" id="firmautogeneradas"
-				th:name="firmautogeneradas" class="form-control" placeholder="firmautogeneradas" required> 
-				<label for="firma"	class="sr-only">Firma</label> 
-				<input type="password" id="firma" th:name="firma" class="form-control" placeholder="firma" required>
 
+<form th:action="@{/firmamasiva}" method="post">
+			<h3 class="form-signin-heading text-center">Firma masiva</h3>
+<div class="form-group row text-center">
 
-			<input type="submit" class="btn btn-lg btn-primary btn-block" th:href="@{/firmausuario}" th:value="'FIRMAR'">
+			<label for="firmautogeneradas" class="col-sm-2 col-form-label">Firma	autogenerada</label> 
+			<div class="col-sm-8">
+				<input type="password" id="firmautogeneradas" th:name="firmautogeneradas" class="form-control"
+				placeholder="firmautogeneradas" required> 
+		</div>		
+		</div>		
+
+	<div class="form-group row text-center">
 				
+				<label for="firma"	class="col-sm-2 col-form-label">Firma</label>
+				<br> 
+				<div class="col-sm-8">
+				<input type="password" id="firma" th:name="firma" class="form-control" placeholder="firma"
+				required> 
+				<br>
+		</div>		
+		</div>	
+				
+				
+				<div class="form-group col-sm-3 left">
+				<input type="submit" class="btn btn-lg btn-primary btn-block" th:href="@{/firmamasiva}"	th:value="'FIRMAR'">
+					
+				</div>
 		</form>
+
+
 
 	</div>
 	<div class="container">

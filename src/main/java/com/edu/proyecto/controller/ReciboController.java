@@ -63,7 +63,6 @@ import com.opencsv.CSVReaderHeaderAware;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvValidationException;
-import com.sun.tools.sjavac.Log;
 import com.edu.proyecto.SpringSecuityConfig;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -116,6 +115,7 @@ public class ReciboController {
 			flash.addFlashAttribute("error", "La factura no existe en la base de datos!");
 			return "redirect:/listarecibos";
 		}
+		//model.addAttribute("firma", reciboc.getUsuario().get);
 
 		model.addAttribute("reciboc", reciboc);
 		return "verecibousuario";
@@ -178,6 +178,9 @@ public class ReciboController {
 	
 	@RequestMapping(value = "/firmaindividual", method = RequestMethod.POST)
 	public String firmaindividual(@RequestParam(name = "conformidad") String conformidad,Model model, Authentication auten,HttpSession session,RedirectAttributes flash) {
+		session.setAttribute("name", null);
+		Usuario usuario = usuarioservice.findByUsername(auten.getName());
+
 		if (conformidad.equals("Conformidad")) {
 			conformidades =  2L;
 			System.out.println("ESTADO CONFORMIDAD " + conformidades);
@@ -185,7 +188,12 @@ public class ReciboController {
 		if(session.getAttribute("name") == null) {
 			String uniquename = UUID.randomUUID().toString();
 			session.setAttribute("name", uniquename);
-//			enviomailfirmaautogenerada();
+			
+			usuariocorreo = usuario.getEmail();
+			nombreusuario = usuario.getUsername();
+			clavegenerada = uniquename;
+
+			enviomailfirmaautogenerada();
 		}		
 		else {
 			System.out.println("NAME SESSION "+ session.getAttribute("name"));
@@ -287,7 +295,7 @@ public class ReciboController {
 		log.info(auten.getName() + " EMAIL - CORREO ELECTRONICO " + usuario.getEmail());
 		System.out.print("ESTA ES EL ID MIRAME " + emailadmin);		
 		List<ReciboC> reciboc = receservice.findAllRec();
-
+		arrayrecibosinfirma.clear();
 //		PageRender<ReciboC> pageRender = new PageRender<ReciboC>("/listarecibos", reciboc);
 		if (estado == 1) {
 			for (ReciboC reciboC2 : reciboc) {
